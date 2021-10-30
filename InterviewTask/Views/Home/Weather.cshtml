@@ -1,0 +1,74 @@
+﻿@{
+    Layout = null;
+}
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<h2>Weather</h2>
+<input type="button" id="GetallData" value="Get Current Weather of @ViewBag.Getcity" />
+
+
+<table id="tableWeather" style="display:none;">
+    <thead>
+        <tr>
+            <td>City</td>
+            <td>Main</td>
+            <td>Description</td>
+            <td>Temp</td>
+            <td>Humidity</td>
+            <td>Pressure</td>
+        </tr>
+        <tr>
+            <td>
+                
+            </td>
+            <td>
+                
+            </td>
+            <td>
+                
+            </td>
+            <td>
+                
+            </td>
+            <td>
+                
+            </td>
+        </tr>
+    </thead>
+
+</table>
+
+
+<script>
+
+        $(document).ready(function () {
+            $("#GetallData").click(function () {
+                $("#tableWeather").show();
+                $.ajax({
+                    url: 'http://api.openweathermap.org/data/2.5/weather?q=@ViewBag.Getcity&appid=@ViewBag.Getapikey',
+                    dataType: "json",
+                    type: "Get",
+                    success: function (data) {
+                        var tr;
+                        console.log(data);
+
+                        tr = tr + "<tr>";
+                        tr = tr + "<td>@ViewBag.Getcity</td>";
+                        tr = tr + "<td>" + data.weather[0].main + "</td>";
+                        tr = tr + "<td>" + data.weather[0].description + "</td>";
+                        tr = tr + "<td>" + data.main.temp + "</td>";
+                        tr = tr + "<td>" + data.main.humidity + "</td>";
+                        tr = tr + "<td>" + data.main.pressure + "</td>";
+                        tr = tr + "</tr>";
+                        
+                        $('#tableWeather').append(tr);
+                    },
+                    error: function (xhr) {
+                        alert('No Valid Data');
+                    }
+                });
+              });
+
+
+        });
+</script>   

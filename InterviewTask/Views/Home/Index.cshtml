@@ -161,8 +161,55 @@
             </div>
         </div>
     </section>
-    
+
     <!-- Create your cards here.  One has been provided as a template for use in your loop based on the results contained within your model -->
+    @model IEnumerable<InterviewTask.Models.HelperServiceModel>
+    
+
+    <section>
+        <div class="container">
+            <div class="row">
+                <div class="block richtextblock col-md-12 col-sm-12">
+                    <div class="block-inner text-center">
+                        <header>
+
+                            @if (Model != null)
+                            {
+                                foreach (var item in Model)
+                                {
+                            <div id="menu" style="background:@(item.CurrentOpening?"orange":"grey"); margin: 15px; padding: 10px;">
+
+                                <a href="https://www.mariecurie.org.uk/help/helper-volunteers"><h4>
+                                    @Html.DisplayFor(modelItem => item.Title)
+                                </h4></a>
+                                <div style="border-top:2px solid #999;padding:5px;">&nbsp;</div>
+                                <div style="padding:5px;padding-right:60px">
+                                    @Html.DisplayFor(modelItem => item.Description)
+                                    <br />
+                                </div>
+                                <div style="padding:5px;">
+                                    <b>@item.TelephoneNumber</b>
+                                    <br />
+                                </div>
+                                <div style="border-top:2px solid #999;padding:5px;">&nbsp;</div>
+                                <div>
+                                    @Html.DisplayFor(modelItem => item.OpeningInfo)
+                                </div>
+                                <div>
+                                    <a href="@Url.Action("weather", "home")/@item.Title.Replace(" Helper Service","")"><input type="button" value="Current Weather"></a>
+                                </div>
+                            </div>
+                                }
+                            }
+                            <p class="lead">
+                                We know the little things can make a big difference when you, or someone you care about, are living with a terminal illness.
+                                <h2>Find a Marie Curie Helper</h2>
+                        </header>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
 
     <section>
         <div class="container">
