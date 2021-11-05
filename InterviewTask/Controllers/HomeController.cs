@@ -26,56 +26,47 @@ namespace InterviewTask.Controllers
             DateTime currentdatetime =  DateTime.Now;
             DayOfWeek weekday = currentdatetime.DayOfWeek;
             int weekdaynum = (int)weekday;
-            foreach (var item in wrapperModel)
+
+            try
             {
-                var currentOpeningTimes = new List<int> { };
-
-                List<List<int>> TimeList = new List<List<int>>();
-                TimeList.Add(item.SundayOpeningHours);
-                TimeList.Add(item.MondayOpeningHours);
-                TimeList.Add(item.TuesdayOpeningHours);
-                TimeList.Add(item.WednesdayOpeningHours);
-                TimeList.Add(item.ThursdayOpeningHours);
-                TimeList.Add(item.FridayOpeningHours);
-                TimeList.Add(item.SaturdayOpeningHours);
-                
-                string[]  weekdays = new string[]{ "Sunday", "Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"};
-                currentOpeningTimes = TimeList[weekdaynum];
-                
-                string openhour = currentOpeningTimes.ElementAt(0) + ":00";
-                string closehour = currentOpeningTimes.ElementAt(1) + ":00";
-
-                startDateTime = DateTime.Parse(openhour);
-                endDateTime = DateTime.Parse(closehour);
-
-                if (TimeSpan.Compare(currentdatetime.TimeOfDay, startDateTime.TimeOfDay) == 1 && TimeSpan.Compare(endDateTime.TimeOfDay, currentdatetime.TimeOfDay) == 1)
+                foreach (var item in wrapperModel)
                 {
-                    item.CurrentOpening = true;
-                    item.OpeningInfo = string.Format("OPEN - OPEN TODAY UNTIL {0}", closehour); 
+                    var currentOpeningTimes = new List<int> { };
 
-                }
-                else
-                {
-                    item.CurrentOpening = false;
-                    string nextopenweekday = "";
-                    string nextopenhour = "";
-                    int startweekcheck = 0;
-                    bool checkdone = false;
-                    if (weekdaynum <= 6 && weekdaynum >= 0)
-                        startweekcheck = weekdaynum;
-                    for (int i = startweekcheck; i < 7; i++)
+                    List<List<int>> TimeList = new List<List<int>>();
+                    TimeList.Add(item.SundayOpeningHours);
+                    TimeList.Add(item.MondayOpeningHours);
+                    TimeList.Add(item.TuesdayOpeningHours);
+                    TimeList.Add(item.WednesdayOpeningHours);
+                    TimeList.Add(item.ThursdayOpeningHours);
+                    TimeList.Add(item.FridayOpeningHours);
+                    TimeList.Add(item.SaturdayOpeningHours);
+
+                    string[] weekdays = new string[] { "Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday" };
+                    currentOpeningTimes = TimeList[weekdaynum];
+
+                    string openhour = currentOpeningTimes.ElementAt(0) + ":00";
+                    string closehour = currentOpeningTimes.ElementAt(1) + ":00";
+
+                    startDateTime = DateTime.Parse(openhour);
+                    endDateTime = DateTime.Parse(closehour);
+
+                    if (TimeSpan.Compare(currentdatetime.TimeOfDay, startDateTime.TimeOfDay) == 1 && TimeSpan.Compare(endDateTime.TimeOfDay, currentdatetime.TimeOfDay) == 1)
                     {
-                        if(TimeList[i].ElementAt(0) > 0)
-                        {
-                            nextopenweekday = weekdays[i].ToString();
-                            nextopenhour = TimeList[i].ElementAt(0) + ":00";
-                            checkdone = true;
-                            break;
-                        }
+                        item.CurrentOpening = true;
+                        item.OpeningInfo = string.Format("OPEN - OPEN TODAY UNTIL {0}", closehour);
+
                     }
-                    if (checkdone == false)
+                    else
                     {
-                        for (int i = 0; i < 7; i++)
+                        item.CurrentOpening = false;
+                        string nextopenweekday = "";
+                        string nextopenhour = "";
+                        int startweekcheck = 0;
+                        bool checkdone = false;
+                        if (weekdaynum <= 6 && weekdaynum >= 0)
+                            startweekcheck = weekdaynum;
+                        for (int i = startweekcheck; i < 7; i++)
                         {
                             if (TimeList[i].ElementAt(0) > 0)
                             {
@@ -85,10 +76,28 @@ namespace InterviewTask.Controllers
                                 break;
                             }
                         }
+                        if (checkdone == false)
+                        {
+                            for (int i = 0; i < 7; i++)
+                            {
+                                if (TimeList[i].ElementAt(0) > 0)
+                                {
+                                    nextopenweekday = weekdays[i].ToString();
+                                    nextopenhour = TimeList[i].ElementAt(0) + ":00";
+                                    checkdone = true;
+                                    break;
+                                }
+                            }
+                        }
+                        item.OpeningInfo = string.Format("CLOSED - REOPENS {0} at {1}", nextopenweekday, nextopenhour);
                     }
-                    item.OpeningInfo = string.Format("CLOSED - REOPENS {0} at {1}", nextopenweekday, nextopenhour);
-                }
 
+                }
+            }
+            catch (System.Exception ex)
+            {
+                HelperServiceRepository.LogError(ex.Message, ex.StackTrace, ex.Source, ex.TargetSite.ToString());
+                throw;
             }
 
             return View(wrapperModel);

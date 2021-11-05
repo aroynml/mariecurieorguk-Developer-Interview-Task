@@ -29,9 +29,9 @@ namespace InterviewTask.Services
         }
 
         /// <summary>
-        /// Create Log File
+        /// Create ErrorLog File
         /// </summary>
-        private void LogError(Exception ex)
+        public static void LogError(string Message, string StackTrace, string Source, string TargetSite)
         {
 
 
@@ -39,13 +39,13 @@ namespace InterviewTask.Services
             message += Environment.NewLine;
             message += "--------------------------------------------------------";
             message += Environment.NewLine;
-            message += string.Format("Message: {0}", ex.Message);
+            message += string.Format("Message: {0}", Message);
             message += Environment.NewLine;
-            message += string.Format("StackTrace: {0}", ex.StackTrace);
+            message += string.Format("StackTrace: {0}", StackTrace);
             message += Environment.NewLine;
-            message += string.Format("Source: {0}", ex.Source);
+            message += string.Format("Source: {0}", Source);
             message += Environment.NewLine;
-            message += string.Format("TargetSite: {0}", ex.TargetSite.ToString());
+            message += string.Format("TargetSite: {0}", TargetSite);
             message += Environment.NewLine;
             message += "--*****************************************************--";
             message += Environment.NewLine;
